@@ -7,7 +7,7 @@ type Node struct {
 
 type Block struct {
 	Next *Block
-	Val  [256]int
+	Val  []int
 }
 
 // func RangeNode(n *Node, limit int) []int {
@@ -50,16 +50,21 @@ func RangeBlock(b *Block, limit int, start int) []int {
 	if startIdx == -1 {
 		return nil
 	}
-
-	result := make([]int, len(b.Val)-startIdx)
-	copy(result, b.Val[startIdx:])
+	var result []int
+	result = append(result, b.Val[startIdx:]...)
 
 	var walk func(cur *Block, count int)
 	walk = func(cur *Block, count int) {
 		end := limit - count + 1
 
+		if end < 1 {
+			return
+		}
+
 		if end < 257 {
-			copy(result, b.Val[:end])
+			result = append(result, cur.Val[:end]...)
+		} else {
+			result = append(result, cur.Val...)
 		}
 
 		count += 256
@@ -69,11 +74,13 @@ func RangeBlock(b *Block, limit int, start int) []int {
 		}
 	}
 
+	walk(b, len(result))
+
 	return result
 
 }
 
-func bs(hay [256]int, needle int) int {
+func bs(hay []int, needle int) int {
 	low := 0
 	high := len(hay) - 1
 
