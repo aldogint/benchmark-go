@@ -14,7 +14,7 @@ func BenchmarkRangeNode(b *testing.B) {
 }
 
 func BenchmarkRangeBlock(b *testing.B) {
-	for i := 256; i < b.N; i++ {
+	for i := 0; i < b.N; i++ {
 		b.StopTimer()
 		data := setupBlock(i)
 		b.StartTimer()
